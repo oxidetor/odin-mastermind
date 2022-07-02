@@ -1,7 +1,7 @@
 require 'set'
 
 class Player
-  attr_accessor :name
+  attr_accessor :name, :pegs
 
   def initialize(name = 'NoName')
     @name = name
@@ -17,6 +17,7 @@ end
 class ComputerPlayer < Player
   def initialize
     super('COMPUTER')
+    @previous_guess = nil
   end
 
   def make_code
@@ -27,9 +28,16 @@ class ComputerPlayer < Player
 
   def make_guess
     guess = []
+    think
     4.times { guess.push(COLORS.to_a.sample) }
     sleep(1)
+    @previous_guess = guess
     guess
+  end
+
+  def think
+    p @pegs
+    p @previous_guess
   end
 end
 

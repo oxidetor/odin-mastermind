@@ -3,7 +3,7 @@ require './player'
 
 class Game
   attr_accessor :code, :guess, :solved
-  attr_reader :turns
+  attr_reader :turns, :breaker
 
   def initialize
     @turns = 12

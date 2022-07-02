@@ -86,6 +86,7 @@ class Board
     pegs = []
     right_positions.times { pegs.push('pos') }
     right_colors.times { pegs.push('col') }
+    @game.breaker.pegs = pegs
     pegs
   end
 end
