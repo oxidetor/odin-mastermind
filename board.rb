@@ -7,12 +7,20 @@ class Board
   end
 
   def check_guess
-    right_positions = 0
-    @game.guess.each_with_index.count do |position, index|
-      right_positions += 1 if position == @game.code[index]
-    end
-    right_colors = (@game.guess & @game.code).size - right_positions
+    @game.solved = true if right_positions == 4
     @pegs = generate_pegs(right_positions, right_colors)
+  end
+
+  def right_positions
+    @game.guess.each_with_index.count do |position, index|
+      position == @game.code[index]
+    end
+  end
+
+  def right_colors
+    @game.guess.sort.each_with_index.count do |position, index|
+      position == @game.code.sort[index]
+    end - right_positions
   end
 
   def draw_board

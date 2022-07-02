@@ -15,7 +15,14 @@ class Game
 
   def play_game
     self.code = @maker.make_code
-    play_turn until @turns.zero?
+    until @turns.zero?
+      play_turn
+      next unless solved == true
+
+      @board.reveal_code
+      puts 'YOU WIN'
+      return
+    end
     @board.reveal_code
   end
 
@@ -23,7 +30,6 @@ class Game
     @board.draw_board
     self.guess = @breaker.make_guess
     @board.check_guess
-    return if solved
 
     @turns -= 1
   end
