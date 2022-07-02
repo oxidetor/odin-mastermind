@@ -14,4 +14,8 @@ class ComputerPlayer < Player
 end
 
 class HumanPlayer < Player
+  def guess_code
+    puts 'Enter your guess:'
+    gets.upcase.chomp.split('')
+  end
 end
