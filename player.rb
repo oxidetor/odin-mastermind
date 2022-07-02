@@ -20,10 +20,12 @@ end
 
 class HumanPlayer < Player
   def guess_code
+    guess = nil
     loop do
       puts 'Enter your guess:'
       guess = gets.upcase.chomp.split('')
       break if guess.size == 4 && guess.to_set.subset?(COLORS)
     end
+    guess
   end
 end
