@@ -14,7 +14,9 @@ end
 
 class ComputerPlayer < Player
   def make_code
-    %w[R G B Y]
+    code = []
+    4.times { code.push(COLORS.to_a.sample) }
+    code
   end
 end
 
