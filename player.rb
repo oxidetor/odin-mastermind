@@ -1,5 +1,7 @@
+require 'set'
+
 class Player
-  def initialize; end
+  COLORS = Set['R', 'G', 'B', 'Y'].freeze
 
   def make_code
     'rbgy'
@@ -11,11 +13,17 @@ class Player
 end
 
 class ComputerPlayer < Player
+  def make_code
+    %w[R G B Y]
+  end
 end
 
 class HumanPlayer < Player
   def guess_code
-    puts 'Enter your guess:'
-    gets.upcase.chomp.split('')
+    loop do
+      puts 'Enter your guess:'
+      guess = gets.upcase.chomp.split('')
+      break if guess.size == 4 && guess.to_set.subset?(COLORS)
+    end
   end
 end
