@@ -44,10 +44,10 @@ class Board
   def draw_empty_lines
     @game.turns.times do |index|
       if index == @game.turns - 1
-        puts draw_turn_number('==>') + draw_holes(%w[__ __ __ __]) + draw_pegs([]).join(' ')
+        puts draw_turn_number('==>') + draw_holes(%w[__ __ __ __])
 
       else
-        puts draw_turn_number(12 - index) + draw_holes(%w[__ __ __ __]) + draw_pegs([]).join(' ')
+        puts draw_turn_number(12 - index) + draw_holes(%w[__ __ __ __])
       end
     end
   end
