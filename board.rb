@@ -27,6 +27,7 @@ class Board
   end
 
   def draw_board
+    draw_shield
     draw_empty_lines
     return unless @game.guess
 
@@ -35,19 +36,24 @@ class Board
     played_lines.push [@game.guess, @pegs, 12 - @game.turns]
   end
 
+  def draw_shield
+    puts "\nCODE\t| 🔒 🔒 🔒 🔒\n\n" unless @game.solved || @game.turns.zero?
+    puts "\n" + draw_turn_number('CODE') + draw_holes(@game.code) + "\n\n" if @game.solved || @game.turns.zero?
+  end
+
   def draw_empty_lines
     @game.turns.times do |index|
       if index == @game.turns - 1
-        puts draw_holes(%w[__ __ __ __], '==>') + draw_pegs([]).join(' ')
+        puts draw_turn_number('==>') + draw_holes(%w[__ __ __ __]) + draw_pegs([]).join(' ')
 
       else
-        puts draw_holes(%w[__ __ __ __], 12 - index) + draw_pegs([]).join(' ')
+        puts draw_turn_number(12 - index) + draw_holes(%w[__ __ __ __]) + draw_pegs([]).join(' ')
       end
     end
   end
 
   def draw_current_line
-    puts draw_holes(@game.guess, 12 - @game.turns) + draw_pegs(@pegs).join(' ')
+    puts draw_turn_number(12 - @game.turns) + draw_holes(@game.guess) + draw_pegs(@pegs).join(' ')
   end
 
   def draw_played_lines
@@ -57,15 +63,19 @@ class Board
   end
 
   def draw_played_line(line)
-    puts draw_holes(line[0], line[2]) + draw_pegs(line[1]).join(' ')
+    puts draw_turn_number(line[2]) + draw_holes(line[0]) + draw_pegs(line[1]).join(' ')
   end
 
-  def draw_holes(guess, turn_number)
-    holes = " #{turn_number}\t| "
+  def draw_holes(guess)
+    holes = ''
     guess.each do |guess|
       holes += replace(guess) + ' '
     end
     holes + "\t"
+  end
+
+  def draw_turn_number(turn_number)
+    " #{turn_number}\t| "
   end
 
   def draw_pegs(pegs)
@@ -74,12 +84,8 @@ class Board
 
   def generate_pegs(right_positions, right_colors)
     pegs = []
-    right_positions.times { pegs.push('P') }
-    right_colors.times { pegs.push('W') }
+    right_positions.times { pegs.push('pos') }
+    right_colors.times { pegs.push('col') }
     pegs
-  end
-
-  def reveal_code
-    puts "Code: | #{@game.code[0]} | #{@game.code[1]} | #{@game.code[2]} | #{@game.code[3]} |"
   end
 end

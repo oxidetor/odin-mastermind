@@ -20,11 +20,11 @@ class Game
       next unless solved == true
 
       @board.draw_board
-      @board.reveal_code
-      puts 'YOU WIN'
+      puts "\nYOU WIN"
       return
     end
-    @board.reveal_code
+    @board.draw_board
+    puts "\nYOU LOSE"
   end
 
   def play_turn

@@ -9,9 +9,13 @@ module Colorize
       '🟩'
     when 'Y'
       '🟨'
+    when 'O'
+      '🟧'
     when 'P'
+      '🟪'
+    when 'pos'
       '🔴'
-    when 'W'
+    when 'col'
       '⚪️'
     else
       value
