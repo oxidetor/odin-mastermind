@@ -17,11 +17,11 @@ class Board
 
   def draw_board
     draw_empty_lines
-    if @game.guess
-      draw_current_line
-      draw_played_lines
-      played_lines.push [@game.guess, @pegs, 12 - @game.turns]
-    end
+    return unless @game.guess
+
+    draw_current_line
+    draw_played_lines
+    played_lines.push [@game.guess, @pegs, 12 - @game.turns]
   end
 
   def draw_empty_lines
@@ -62,5 +62,9 @@ class Board
     right_positions.times { pegs.push('R') }
     right_colors.times { pegs.push('W') }
     pegs
+  end
+
+  def reveal_code
+    puts "Code: | #{@game.code[0]} | #{@game.code[1]} | #{@game.code[2]} | #{@game.code[3]} |"
   end
 end

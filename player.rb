@@ -3,13 +3,9 @@ require 'set'
 class Player
   COLORS = Set['R', 'G', 'B', 'Y'].freeze
 
-  def make_code
-    'rbgy'
-  end
+  def make_code; end
 
-  def guess_code
-    'rbgy'
-  end
+  def guess_code; end
 end
 
 class ComputerPlayer < Player
