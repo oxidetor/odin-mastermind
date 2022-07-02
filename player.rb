@@ -28,16 +28,35 @@ class ComputerPlayer < Player
 
   def make_guess
     guess = []
-    think
     4.times { guess.push(COLORS.to_a.sample) }
-    sleep(1)
+    guess = think(guess)
+    sleep(2)
     @previous_guess = guess
     guess
   end
 
-  def think
+  def think(guess)
+    # if pos, randomly select an element from previous guess and
+    # keep it in the same position
+    # if col, randomly select an element from previouis guess and
+    # keep it in new guess but not necessarily in the same spot
+    return guess if @pegs.nil? || @previous_guess.nil?
+
+    indices = [0, 1, 2, 3]
+    right_pos_count = @pegs.count('pos')
+    right_pos_indices = indices.sample(right_pos_count)
+    right_col_count = @pegs.count('col')
+    non_right_pos_indices = indices - right_pos_indices
+    right_col_indices = non_right_pos_indices.sample(right_col_count)
+    right_pos_indices.each { |rp_index| guess[rp_index] = @previous_guess[rp_index] }
+    right_col_indices.each do |rc_index|
+      guess[rc_index] = @previous_guess[rc_index] unless guess.include?(@previous_guess[rc_index])
+    end
+
     p @pegs
     p @previous_guess
+
+    guess
   end
 end
 
