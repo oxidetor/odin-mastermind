@@ -17,14 +17,16 @@ class Board
 
   def draw_board
     draw_empty_lines
-    draw_current_line
-    draw_played_lines
-    played_lines.push [@game.guess, @pegs, 12 - @game.turns + 1]
+    if @game.guess
+      draw_current_line
+      draw_played_lines
+      played_lines.push [@game.guess, @pegs, 12 - @game.turns]
+    end
   end
 
   def draw_empty_lines
-    (@game.turns - 1).times do |index|
-      if index == @game.turns - 2
+    @game.turns.times do |index|
+      if index == @game.turns - 1
         puts draw_holes(%w[_ _ _ _], '==>') + draw_pegs([]).join(' ')
 
       else
@@ -34,7 +36,7 @@ class Board
   end
 
   def draw_current_line
-    puts draw_holes(@game.guess, 12 - @game.turns + 1) + draw_pegs(@pegs).join(' ')
+    puts draw_holes(@game.guess, 12 - @game.turns) + draw_pegs(@pegs).join(' ')
   end
 
   def draw_played_lines

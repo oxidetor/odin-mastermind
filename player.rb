@@ -19,7 +19,7 @@ class ComputerPlayer < Player
 end
 
 class HumanPlayer < Player
-  def guess_code
+  def make_guess
     guess = nil
     loop do
       puts 'Enter your guess:'

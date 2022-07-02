@@ -18,9 +18,9 @@ class Game
   end
 
   def play_turn
-    self.guess = @breaker.guess_code
-    @board.check_guess
     @board.draw_board
+    self.guess = @breaker.make_guess
+    @board.check_guess
     @turns -= 1
   end
 
