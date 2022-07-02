@@ -19,6 +19,7 @@ class Game
       play_turn
       next unless solved == true
 
+      @board.draw_board
       @board.reveal_code
       puts 'YOU WIN'
       return

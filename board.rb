@@ -1,4 +1,7 @@
+require './colorize'
+
 class Board
+  include Colorize
   attr_accessor :played_lines
 
   def initialize(game)
@@ -35,10 +38,10 @@ class Board
   def draw_empty_lines
     @game.turns.times do |index|
       if index == @game.turns - 1
-        puts draw_holes(%w[_ _ _ _], '==>') + draw_pegs([]).join(' ')
+        puts draw_holes(%w[__ __ __ __], '==>') + draw_pegs([]).join(' ')
 
       else
-        puts draw_holes(%w[_ _ _ _], 12 - index) + draw_pegs([]).join(' ')
+        puts draw_holes(%w[__ __ __ __], 12 - index) + draw_pegs([]).join(' ')
       end
     end
   end
@@ -58,16 +61,20 @@ class Board
   end
 
   def draw_holes(guess, turn_number)
-    " #{turn_number}\t| #{guess[0]} | #{guess[1]} | #{guess[2]} | #{guess[3]} |\t"
+    holes = " #{turn_number}\t| "
+    guess.each do |guess|
+      holes += replace(guess) + ' '
+    end
+    holes + "\t"
   end
 
   def draw_pegs(pegs)
-    pegs
+    pegs.map { |peg| replace(peg) }
   end
 
   def generate_pegs(right_positions, right_colors)
     pegs = []
-    right_positions.times { pegs.push('R') }
+    right_positions.times { pegs.push('P') }
     right_colors.times { pegs.push('W') }
     pegs
   end
