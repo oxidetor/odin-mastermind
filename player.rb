@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'set'
 
 class Player
   attr_accessor :name, :pegs
 
-  def initialize(name = 'NoName')
+  def initialize(game, name = 'NoName')
+    @game = game
     @name = name
   end
 
@@ -15,9 +18,10 @@ class Player
 end
 
 class ComputerPlayer < Player
-  def initialize
-    super('COMPUTER')
+  def initialize(game)
+    super(game, 'COMPUTER')
     @previous_guess = nil
+    @working_set = COLORS.to_a.repeated_permutation(4).to_a
   end
 
   def make_code
@@ -27,36 +31,59 @@ class ComputerPlayer < Player
   end
 
   def make_guess
-    guess = []
-    4.times { guess.push(COLORS.to_a.sample) }
-    guess = think(guess)
+    guess = think
     sleep(2)
     @previous_guess = guess
     guess
   end
 
-  def think(guess)
-    # if pos, randomly select an element from previous guess and
-    # keep it in the same position
-    # if col, randomly select an element from previouis guess and
-    # keep it in new guess but not necessarily in the same spot
-    return guess if @pegs.nil? || @previous_guess.nil?
+  def think
+    return initial_guess if @pegs.nil? || @previous_guess.nil?
 
-    indices = [0, 1, 2, 3]
-    right_pos_count = @pegs.count('pos')
-    right_pos_indices = indices.sample(right_pos_count)
-    right_col_count = @pegs.count('col')
-    non_right_pos_indices = indices - right_pos_indices
-    right_col_indices = non_right_pos_indices.sample(right_col_count)
-    right_pos_indices.each { |rp_index| guess[rp_index] = @previous_guess[rp_index] }
-    right_col_indices.each do |rc_index|
-      guess[rc_index] = @previous_guess[rc_index] unless guess.include?(@previous_guess[rc_index])
-    end
+    filter_right_positions
+    filter_right_colors
 
-    p @pegs
-    p @previous_guess
-
+    puts "\nSet size: #{@working_set.size}"
+    guess = @working_set.sample
+    @working_set.delete(guess)
     guess
+  end
+
+  def filter_right_positions
+    pos_indices = [0, 1, 2, 3]
+    pos_count = @pegs.count('pos')
+    pos_idx_perms = pos_indices.permutation(pos_count).to_a
+
+    @working_set.filter! do |item|
+      pos_idx_perms.any? do |indices|
+        indices.all? { |index| item[index] == @previous_guess[index] }
+      end
+    end
+  end
+
+  def filter_right_colors
+    col_count = @pegs.count('col') + @pegs.count('pos')
+    col_perms = @previous_guess.permutation(col_count).to_a
+
+    @working_set.filter! do |item|
+      col_perms.any? { |perm| contains(item, perm) }
+    end
+  end
+
+  def initial_guess
+    @working_set.filter do |permutation|
+      permutation[0] == permutation[1] &&
+        permutation[2] == permutation[3] &&
+        permutation[0] != permutation[3]
+    end.sample
+  end
+
+  def contains(item, perm)
+    item = item.tally
+    perm = perm.tally
+    third = item.keep_if { |k, _v| perm.key? k }
+    diff = perm.map { |k, v| v - third[k] if third[k] }
+    diff.all? { |value| value <= 0 unless value.nil? }
   end
 end
 

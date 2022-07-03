@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './colorize'
 
 class Board
@@ -14,16 +16,26 @@ class Board
     @pegs = generate_pegs(right_positions, right_colors)
   end
 
-  def right_positions
-    @game.guess.each_with_index.count do |position, index|
+  def try_guess(guess)
+    @pegs = generate_pegs(right_positions(guess), right_colors(guess), 'try')
+  end
+
+  def right_positions(guess = @game.guess)
+    guess.each_with_index.count do |position, index|
       position == @game.code[index]
     end
   end
 
-  def right_colors
-    @game.guess.sort.each_with_index.count do |position, index|
-      position == @game.code.sort[index]
-    end - right_positions
+  def right_colors(guess = @game.guess)
+    code = @game.code.dup
+    count = 0
+    guess.each do |color|
+      if code.include?(color)
+        code.delete(color)
+        count += 1
+      end
+    end
+    count - right_positions
   end
 
   def draw_board
@@ -38,7 +50,7 @@ class Board
 
   def draw_shield
     puts "\nCODE\t| 🔒 🔒 🔒 🔒\n\n" unless @game.solved || @game.turns.zero?
-    puts "\n" + draw_turn_number('CODE') + draw_holes(@game.code) + "\n\n" if @game.solved || @game.turns.zero?
+    puts "\n#{draw_turn_number('CODE')}#{draw_holes(@game.code)}\n\n" if @game.solved || @game.turns.zero?
   end
 
   def draw_empty_lines
@@ -68,10 +80,10 @@ class Board
 
   def draw_holes(guess)
     holes = ''
-    guess.each do |guess|
-      holes += replace(guess) + ' '
+    guess.each do |color|
+      holes += "#{replace(color)} "
     end
-    holes + "\t"
+    "#{holes}\t"
   end
 
   def draw_turn_number(turn_number)
@@ -82,11 +94,11 @@ class Board
     pegs.map { |peg| replace(peg) }
   end
 
-  def generate_pegs(right_positions, right_colors)
+  def generate_pegs(right_positions, right_colors, mode = 'normal')
     pegs = []
     right_positions.times { pegs.push('pos') }
     right_colors.times { pegs.push('col') }
-    @game.breaker.pegs = pegs
+    @game.breaker.pegs = pegs if mode == 'normal'
     pegs
   end
 end

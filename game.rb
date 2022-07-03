@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require './board'
 require './player'
 
 class Game
   attr_accessor :code, :guess, :solved
-  attr_reader :turns, :breaker
+  attr_reader :turns, :breaker, :board
 
   def initialize
     @turns = 12
     @board = Board.new(self)
-    @maker = ComputerPlayer.new
-    @breaker = HumanPlayer.new
+    @maker = ComputerPlayer.new(self)
+    @breaker = HumanPlayer.new(self)
     @solved = false
   end
 
