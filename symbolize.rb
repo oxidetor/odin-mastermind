@@ -2,32 +2,21 @@
 
 module Symbolize
   def replace_holes(value)
-    case value
-    when 'R'
-      '🟥'
-    when 'B'
-      '🟦'
-    when 'G'
-      '🟩'
-    when 'Y'
-      '🟨'
-    when 'O'
-      '🟧'
-    when 'P'
-      '🟪'
-    else
-      value
-    end
+    symbol = {
+      'R' => '🟥',
+      'B' => '🟦',
+      'G' => '🟩',
+      'Y' => '🟨',
+      'O' => '🟧',
+      'P' => '🟪'
+    }[value]
+    symbol.nil? ? value : symbol
   end
 
-  def replace_pegs(value)
-    case value
-    when 'pos'
-      '🔴'
-    when 'col'
-      '⚪️'
-    else
-      value
-    end
+  def replace_pegs(_value)
+    {
+      'pos' => '🔴',
+      'col' => '⚪️'
+    }[value]
   end
 end
