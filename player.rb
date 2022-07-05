@@ -31,7 +31,7 @@ class ComputerPlayer < Player
     return initial_guess if @pegs.nil? || @game.guess.nil?
 
     filter_possible_set
-    puts "\nPossible set size: #{@possible_set.size}"
+    # puts "\nPossible set size: #{@possible_set.size}"
     sleep(2)
     @possible_set.delete(@possible_set.sample)
   end
