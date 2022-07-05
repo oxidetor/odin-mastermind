@@ -20,7 +20,6 @@ end
 class ComputerPlayer < Player
   def initialize(game)
     super(game, 'COMPUTER')
-    @previous_guess = nil
     @possible_set = COLORS.to_a.repeated_permutation(4).to_a
   end
 
@@ -31,22 +30,14 @@ class ComputerPlayer < Player
   end
 
   def make_guess
-    guess = think
+    puts "\nPossible set size: #{@possible_set.size}"
     sleep(2)
-    @previous_guess = guess
-    guess
-  end
-
-  def think
-    return initial_guess if @pegs.nil? || @previous_guess.nil?
+    return initial_guess if @pegs.nil? || @game.guess.nil?
 
     filter_matching_positions
     filter_matching_colors
 
-    puts "\nPossible set size: #{@possible_set.size}"
-    guess = @possible_set.sample
-    @possible_set.delete(guess)
-    guess
+    @possible_set.delete(@possible_set.sample)
   end
 
   def filter_matching_positions
@@ -58,7 +49,7 @@ class ComputerPlayer < Player
   def matching_positions(possible_set_item)
     count = 0
     possible_set_item.each_with_index do |color, idx|
-      count += 1 if color == @previous_guess[idx]
+      count += 1 if color == @game.guess[idx]
     end
     count
   end
@@ -70,11 +61,11 @@ class ComputerPlayer < Player
   end
 
   def matching_colors(possible_set_item)
-    previous_guess = @previous_guess.dup
+    guess = @game.guess.dup
     count = 0
     possible_set_item.each do |color|
-      if previous_guess.include?(color)
-        previous_guess.delete_at(previous_guess.index(color))
+      if guess.include?(color)
+        guess.delete_at(guess.index(color))
         count += 1
       end
     end
