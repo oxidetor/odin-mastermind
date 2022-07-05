@@ -22,8 +22,8 @@ class Game
   def intro_prompt
     puts('Hello, welcome to Mastermind! What is your name?')
     @breaker.name = gets.chomp
-    puts("Hi #{@breaker.name}. Would you like to (M)ake a code or (B)reak a code?")
-    switch_roles if gets.upcase.chomp == 'M'
+    puts("\nHi #{@breaker.name}. Would you like to (M)ake a code or (B)reak a code?")
+    switch_roles if gets[0].upcase.chomp == 'M'
   end
 
   def play_game

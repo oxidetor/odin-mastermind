@@ -37,7 +37,7 @@ class ComputerPlayer < Player
   end
 
   def initial_guess
-    @possible_set.filter do |possible_set_item|
+    @possible_set.select do |possible_set_item|
       possible_set_item[0] == possible_set_item[1] &&
         possible_set_item[2] == possible_set_item[3] &&
         possible_set_item[0] != possible_set_item[3]
@@ -45,7 +45,7 @@ class ComputerPlayer < Player
   end
 
   def filter_possible_set
-    @possible_set.filter! do |possible_set_item|
+    @possible_set.select! do |possible_set_item|
       matching_positions(possible_set_item) == @pegs.count('pos') &&
         matching_colors(possible_set_item) == @pegs.count('col') + @pegs.count('pos')
     end
