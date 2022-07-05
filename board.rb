@@ -31,7 +31,7 @@ class Board
     count = 0
     guess.each do |color|
       if code.include?(color)
-        code.delete(color)
+        code.delete_at(code.index(color))
         count += 1
       end
     end

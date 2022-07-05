@@ -40,8 +40,8 @@ class ComputerPlayer < Player
   def think
     return initial_guess if @pegs.nil? || @previous_guess.nil?
 
-    filter_right_positions
-    filter_right_colors
+    filter_matching_positions
+    filter_matching_colors
 
     puts "\nSet size: #{@working_set.size}"
     guess = @working_set.sample
@@ -49,25 +49,36 @@ class ComputerPlayer < Player
     guess
   end
 
-  def filter_right_positions
-    pos_indices = [0, 1, 2, 3]
-    pos_count = @pegs.count('pos')
-    pos_idx_perms = pos_indices.permutation(pos_count).to_a
-
+  def filter_matching_positions
     @working_set.filter! do |item|
-      pos_idx_perms.any? do |indices|
-        indices.all? { |index| item[index] == @previous_guess[index] }
-      end
+      matching_positions(item) == @pegs.count('pos')
     end
   end
 
-  def filter_right_colors
-    col_count = @pegs.count('col') + @pegs.count('pos')
-    col_perms = @previous_guess.permutation(col_count).to_a
-
-    @working_set.filter! do |item|
-      col_perms.any? { |perm| contains(item, perm) }
+  def matching_positions(item)
+    count = 0
+    item.each_with_index do |color, idx|
+      count += 1 if color == @previous_guess[idx]
     end
+    count
+  end
+
+  def filter_matching_colors
+    @working_set.filter! do |item|
+      matching_colors(item) == @pegs.count('col') + @pegs.count('pos')
+    end
+  end
+
+  def matching_colors(item)
+    previous_guess = @previous_guess.dup
+    count = 0
+    item.each do |color|
+      if previous_guess.include?(color)
+        previous_guess.delete_at(previous_guess.index(color))
+        count += 1
+      end
+    end
+    count
   end
 
   def initial_guess
@@ -76,14 +87,6 @@ class ComputerPlayer < Player
         permutation[2] == permutation[3] &&
         permutation[0] != permutation[3]
     end.sample
-  end
-
-  def contains(item, perm)
-    item = item.tally
-    perm = perm.tally
-    third = item.keep_if { |k, _v| perm.key? k }
-    diff = perm.map { |k, v| v - third[k] if third[k] }
-    diff.all? { |value| value <= 0 unless value.nil? }
   end
 end
 
