@@ -3,7 +3,7 @@
 require './colorize'
 
 class Board
-  include Colorize
+  include Symbolize
   attr_accessor :played_lines
 
   def initialize(game)
@@ -80,8 +80,8 @@ class Board
 
   def draw_holes(guess)
     holes = ''
-    guess.each do |color|
-      holes += "#{replace(color)} "
+    guess.each do |value|
+      holes += "#{replace_holes(value)} "
     end
     "#{holes}\t"
   end
@@ -91,7 +91,7 @@ class Board
   end
 
   def draw_pegs(pegs)
-    pegs.map { |peg| replace(peg) }
+    pegs.map { |peg| replace_pegs(peg) }
   end
 
   def generate_pegs(right_positions, right_colors, mode = 'normal')

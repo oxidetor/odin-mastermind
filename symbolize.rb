@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Colorize
-  def replace(value)
+module Symbolize
+  def replace_holes(value)
     case value
     when 'R'
       '🟥'
@@ -15,6 +15,13 @@ module Colorize
       '🟧'
     when 'P'
       '🟪'
+    else
+      value
+    end
+  end
+
+  def replace_pegs(value)
+    case value
     when 'pos'
       '🔴'
     when 'col'
