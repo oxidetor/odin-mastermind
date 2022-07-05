@@ -30,13 +30,12 @@ class ComputerPlayer < Player
   end
 
   def make_guess
-    puts "\nPossible set size: #{@possible_set.size}"
-    sleep(2)
     return initial_guess if @pegs.nil? || @game.guess.nil?
 
     filter_matching_positions
     filter_matching_colors
-
+    puts "\nPossible set size: #{@possible_set.size}"
+    sleep(2)
     @possible_set.delete(@possible_set.sample)
   end
 
@@ -83,22 +82,20 @@ end
 
 class HumanPlayer < Player
   def make_guess
-    guess = nil
-    loop do
-      puts "\nEnter your guess:"
-      guess = gets.upcase.chomp.split('')
-      break if guess.size == 4 && guess.to_set.subset?(COLORS)
-    end
-    guess
+    prompt_input('guess')
   end
 
   def make_code
-    code = nil
+    prompt_input('code')
+  end
+
+  def prompt_input(type)
+    input = nil
     loop do
-      puts "\nEnter your secret code:"
-      code = gets.upcase.chomp.split('')
-      break if code.size == 4 && code.to_set.subset?(COLORS)
+      puts "\nEnter your #{type} (Example: 'royb' or 'bprg' | Available colors: [r, o, y, b, g, p])"
+      input = gets.upcase.chomp.split('')
+      break if input.size == 4 && input.to_set.subset?(COLORS)
     end
-    code
+    input
   end
 end
