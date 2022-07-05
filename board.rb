@@ -47,7 +47,7 @@ class Board
   end
 
   def draw_shield
-    puts "\nCODE\t| 🔒 🔒 🔒 🔒\n\n" unless @game.solved || @game.turns.zero?
+    puts "\n   CODE\t| 🔒 🔒 🔒 🔒 |\n\n" unless @game.solved || @game.turns.zero?
     puts "\n#{draw_turn_number('CODE')}#{draw_holes(@game.code)}\n\n" if @game.solved || @game.turns.zero?
   end
 
@@ -85,7 +85,7 @@ class Board
   end
 
   def draw_turn_number(turn_number)
-    " #{turn_number}\t| "
+    "   #{turn_number}\t| "
   end
 
   def draw_pegs(pegs)
