@@ -24,37 +24,35 @@ class ComputerPlayer < Player
   end
 
   def make_code
-    code = []
-    4.times { code.push(COLORS.to_a.sample) }
-    code
+    Array.new(4) { COLORS.to_a.sample }
   end
 
   def make_guess
     return initial_guess if @pegs.nil? || @game.guess.nil?
 
-    filter_matching_positions
-    filter_matching_colors
+    filter_possible_set
     puts "\nPossible set size: #{@possible_set.size}"
     sleep(2)
     @possible_set.delete(@possible_set.sample)
   end
 
-  def filter_matching_positions
+  def initial_guess
+    @possible_set.filter do |possible_set_item|
+      possible_set_item[0] == possible_set_item[1] &&
+        possible_set_item[2] == possible_set_item[3] &&
+        possible_set_item[0] != possible_set_item[3]
+    end.sample
+  end
+
+  def filter_possible_set
     @possible_set.filter! do |possible_set_item|
-      matching_positions(possible_set_item) == @pegs.count('pos')
+      matching_positions(possible_set_item) == @pegs.count('pos') &&
+        matching_colors(possible_set_item) == @pegs.count('col') + @pegs.count('pos')
     end
   end
 
   def matching_positions(possible_set_item)
-    possible_set_item.each_with_index.count do |color, index|
-      color == @game.guess[index]
-    end
-  end
-
-  def filter_matching_colors
-    @possible_set.filter! do |possible_set_item|
-      matching_colors(possible_set_item) == @pegs.count('col') + @pegs.count('pos')
-    end
+    possible_set_item.each_with_index.count { |color, index| color == @game.guess[index] }
   end
 
   def matching_colors(possible_set_item)
@@ -67,14 +65,6 @@ class ComputerPlayer < Player
       end
     end
     count
-  end
-
-  def initial_guess
-    @possible_set.filter do |possible_set_item|
-      possible_set_item[0] == possible_set_item[1] &&
-        possible_set_item[2] == possible_set_item[3] &&
-        possible_set_item[0] != possible_set_item[3]
-    end.sample
   end
 end
 
