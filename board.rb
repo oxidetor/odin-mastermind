@@ -81,7 +81,7 @@ class Board
     guess.each do |value|
       holes += "#{replace_holes(value)} "
     end
-    "#{holes}\t"
+    "#{holes}|\t"
   end
 
   def draw_turn_number(turn_number)
