@@ -13,7 +13,7 @@ module Symbolize
     symbol.nil? ? value : symbol
   end
 
-  def replace_pegs(_value)
+  def replace_pegs(value)
     {
       'pos' => '🔴',
       'col' => '⚪️'
