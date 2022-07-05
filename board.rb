@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './symbolize'
+require_relative './symbolize'
 
 class Board
   include Symbolize
