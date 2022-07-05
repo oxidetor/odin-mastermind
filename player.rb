@@ -46,11 +46,9 @@ class ComputerPlayer < Player
   end
 
   def matching_positions(possible_set_item)
-    count = 0
-    possible_set_item.each_with_index do |color, idx|
-      count += 1 if color == @game.guess[idx]
+    possible_set_item.each_with_index.count do |color, index|
+      color == @game.guess[index]
     end
-    count
   end
 
   def filter_matching_colors
