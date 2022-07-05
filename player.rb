@@ -21,7 +21,7 @@ class ComputerPlayer < Player
   def initialize(game)
     super(game, 'COMPUTER')
     @previous_guess = nil
-    @working_set = COLORS.to_a.repeated_permutation(4).to_a
+    @possible_set = COLORS.to_a.repeated_permutation(4).to_a
   end
 
   def make_code
@@ -43,36 +43,36 @@ class ComputerPlayer < Player
     filter_matching_positions
     filter_matching_colors
 
-    puts "\nSet size: #{@working_set.size}"
-    guess = @working_set.sample
-    @working_set.delete(guess)
+    puts "\nPossible set size: #{@possible_set.size}"
+    guess = @possible_set.sample
+    @possible_set.delete(guess)
     guess
   end
 
   def filter_matching_positions
-    @working_set.filter! do |item|
-      matching_positions(item) == @pegs.count('pos')
+    @possible_set.filter! do |possible_set_item|
+      matching_positions(possible_set_item) == @pegs.count('pos')
     end
   end
 
-  def matching_positions(item)
+  def matching_positions(possible_set_item)
     count = 0
-    item.each_with_index do |color, idx|
+    possible_set_item.each_with_index do |color, idx|
       count += 1 if color == @previous_guess[idx]
     end
     count
   end
 
   def filter_matching_colors
-    @working_set.filter! do |item|
-      matching_colors(item) == @pegs.count('col') + @pegs.count('pos')
+    @possible_set.filter! do |possible_set_item|
+      matching_colors(possible_set_item) == @pegs.count('col') + @pegs.count('pos')
     end
   end
 
-  def matching_colors(item)
+  def matching_colors(possible_set_item)
     previous_guess = @previous_guess.dup
     count = 0
-    item.each do |color|
+    possible_set_item.each do |color|
       if previous_guess.include?(color)
         previous_guess.delete_at(previous_guess.index(color))
         count += 1
@@ -82,10 +82,10 @@ class ComputerPlayer < Player
   end
 
   def initial_guess
-    @working_set.filter do |permutation|
-      permutation[0] == permutation[1] &&
-        permutation[2] == permutation[3] &&
-        permutation[0] != permutation[3]
+    @possible_set.filter do |possible_set_item|
+      possible_set_item[0] == possible_set_item[1] &&
+        possible_set_item[2] == possible_set_item[3] &&
+        possible_set_item[0] != possible_set_item[3]
     end.sample
   end
 end
