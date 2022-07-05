@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './colorize'
+require './symbolize'
 
 class Board
   include Symbolize
@@ -14,10 +14,6 @@ class Board
   def check_guess
     @game.solved = true if right_positions == 4
     @pegs = generate_pegs(right_positions, right_colors)
-  end
-
-  def try_guess(guess)
-    @pegs = generate_pegs(right_positions(guess), right_colors(guess), 'try')
   end
 
   def right_positions(guess = @game.guess)
@@ -39,6 +35,8 @@ class Board
   end
 
   def draw_board
+    return if @game.turns == 12 # don't draw an empty board before first turn
+
     draw_shield
     draw_empty_lines
     return unless @game.guess
@@ -94,11 +92,11 @@ class Board
     pegs.map { |peg| replace_pegs(peg) }
   end
 
-  def generate_pegs(right_positions, right_colors, mode = 'normal')
+  def generate_pegs(right_positions, right_colors)
     pegs = []
     right_positions.times { pegs.push('pos') }
     right_colors.times { pegs.push('col') }
-    @game.breaker.pegs = pegs if mode == 'normal'
+    @game.breaker.pegs = pegs
     pegs
   end
 end

@@ -19,15 +19,15 @@ class Game
     @maker, @breaker = @breaker, @maker
   end
 
-  def ask_roles
-    puts('What is your name?')
+  def intro_prompt
+    puts('Hello, welcome to Mastermind! What is your name?')
     @breaker.name = gets.chomp
     puts("Hi #{@breaker.name}. Would you like to (M)ake a code or (B)reak a code?")
     switch_roles if gets.upcase.chomp == 'M'
   end
 
   def play_game
-    ask_roles
+    intro_prompt
     self.code = @maker.make_code
     until @turns.zero?
       play_turn
@@ -41,7 +41,7 @@ class Game
 
   def display_result(winner)
     @board.draw_board
-    puts "\n #{winner.name} wins!"
+    puts "\n#{winner.name} wins in #{12 - turns} turns!\n"
   end
 
   def play_turn
